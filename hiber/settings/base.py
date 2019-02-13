@@ -24,8 +24,10 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'hiber.home',
-    'hiber.search',
+    'hiber.apps.home',
+    'hiber.apps.search',
+    'hiber.apps.api',
+    'hiber.apps.bathouse',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
