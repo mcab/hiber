@@ -108,3 +108,9 @@ venv.bak/
 
 # Mac OS files
 .DS_Store
+
+# Don't include local settings!
+hiber/settings/local.py
+
+# Don't include uploaded media
+media/*
