@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.2
+      - image: circleci/postgres:10.7-alpine-postgis-ram
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "tox.ini" }}
+            # fallback to using the latest cache if no exact match is found
+            - cache-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/development.txt
+
+      - run:
+          name: run tox
+          command: |
+            . venv/bin/activate
+            tox
+
+      - save_cache:
+          paths:
+            - ./venv
+            - ./.tox
+          key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "tox.ini" }}
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports

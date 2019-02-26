@@ -1,0 +1,6 @@
+-r base.txt
+tox>=3.7,<3.8
+pytest>=4.3,<4.4
+flake8>=3.7,<3.8
+pytest-django>=3.4,<3.5
+yapf>=0.26,<0.27
