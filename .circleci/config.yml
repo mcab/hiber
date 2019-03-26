@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.7.2
-      - image: circleci/postgres:10.7-alpine-postgis-ram
+      - image: circleci/postgres:11.2-alpine-postgis-ram
     working_directory: ~/repo
     steps:
       - checkout
@@ -12,6 +12,11 @@ jobs:
             - cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "tox.ini" }}
             # fallback to using the latest cache if no exact match is found
             - cache-
+
+      - run:
+          name: install additional gdal dependencies
+          command: |
+            sudo apt-get install -y libgdal-dev
 
       - run:
           name: install dependencies
