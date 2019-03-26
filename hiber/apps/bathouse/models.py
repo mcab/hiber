@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.gis.db import models
 from django.contrib.postgres.fields import (ArrayField, FloatRangeField,
                                             IntegerRangeField)
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.gis.db import models
 from wagtail.admin.edit_handlers import (MultiFieldPanel, FieldRowPanel,
                                          FieldPanel)
 from wagtail.images.edit_handlers import ImageChooserPanel

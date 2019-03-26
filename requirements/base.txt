@@ -1,3 +1,11 @@
 Django>=2.1,<2.2
 wagtail>=2.4,<2.5
-psycopg2>=2.7,<2.8 --no-binary psycopg2
+
+# PostgreSQL binding
+psycopg2-binary>=2.7,<2.8
+
+# Adds fields for geography data and ranges
+django-extra-fields>=1.0,<1.1
+
+# Adds better API documentation generation
+drf_yasg>=1.13.0,<2.0
