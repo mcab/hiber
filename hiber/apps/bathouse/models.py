@@ -394,3 +394,28 @@ class HousePhysicalFeatures(models.Model):
         help_text="Height above the ground surface (in feet)")
     installed = models.DateField(
         help_text="Date when the bat house was installed")
+
+
+class Observation(models.Model):
+    """
+    Describes a model that a user will submit about observations for the
+    presence of bats in their bat house.
+    """
+
+    house = models.OneToOneField(
+        House, on_delete=models.CASCADE, primary_key=True)
+
+    checked = models.DateTimeField(
+        help_text="Date and when the bat house was checked")
+    present = models.BooleanField(
+        verbose_name="bat presence",
+        help_text="True if bats were there, False otherwise")
+    occupants = models.IntegerField(
+        blank=True, help_text="Amount of bats present in the bat house")
+    acoustic_monitor = models.CharField(
+        max_length=1,
+        choices=(('Y', 'Yes'), ('N', 'No'), ('U', 'Unsure')),
+        help_text="Has a bat biologist came to setup acoustic monitoring around \
+            the bat house?")
+    notes = models.TextField(
+        blank=True, help_text="Other notes about observations")
