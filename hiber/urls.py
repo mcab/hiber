@@ -7,31 +7,17 @@ from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from hiber.apps.search import views as search_views
-from hiber.apps.api import urls as api_urls
-
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Bat House API",
-        default_version="v1",
-        description="API to interact with bat house monitoring",
-    ),
-    urlconf=api_urls,
-    public=True,
-    permission_classes=(permissions.AllowAny, ),
-)
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^api/',
-        schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc'),
+    # TODO: Generate swagger.yaml / fix routing to not do this.
+    #       Due to how Wagtail includes URLS (above) and has no
+    #       way to disable, drf_yasg will autogenerate the routes
+    #       when they shouldn't, which is why we route again in api.urls.
+    url(r'', include('hiber.apps.api.urls')),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
