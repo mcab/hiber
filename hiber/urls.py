@@ -18,6 +18,7 @@ urlpatterns = [
     #       way to disable, drf_yasg will autogenerate the routes
     #       when they shouldn't, which is why we route again in api.urls.
     url(r'', include('hiber.apps.api.urls')),
+    url(r'^auth/', include('hiber.apps.api.auth'), name='auth'),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
