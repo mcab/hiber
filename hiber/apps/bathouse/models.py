@@ -42,7 +42,6 @@ class Bat(models.Model):
 
     RARITY_CHOICES = (('CO', 'Common'), ('SC', 'Seasonally Common'), ('RA',
                                                                       'Rare'))
-
     rarity = models.CharField(
         max_length=2,
         choices=RARITY_CHOICES,
@@ -51,7 +50,6 @@ class Bat(models.Model):
 
     HABIT_CHOICES = (('HI', 'Hibernates'), ('MI', 'Migrates'),
                      ('CR', 'Cave roosts'), ('TR', 'Tree roosts'))
-
     habits = ChoiceArrayField(
         models.CharField(max_length=2, choices=HABIT_CHOICES),
         blank=True,
@@ -62,14 +60,12 @@ class Bat(models.Model):
 
     RISK_CHOICES = (('NT', 'Not threatened'), ('EN', 'Endangered'),
                     ('TH', 'Threatened'), ('SC', 'Special concern'))
-
     risk = ChoiceArrayField(
         models.CharField(max_length=2, choices=RISK_CHOICES),
         blank=True,
         help_text="Conservation status for the species")
 
     SCOPE_CHOICES = (('ST', 'State'), ('FE', 'Federally'))
-
     risk_scope = ChoiceArrayField(
         models.CharField(max_length=2, choices=SCOPE_CHOICES, null=True),
         blank=True,
@@ -134,7 +130,9 @@ class House(models.Model):
     watcher = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
-        help_text="User that provides survey data for the bat house")
+        help_text="User that provides survey data for the bat house",
+        related_name="houses")
+
     location = models.PointField(
         help_text="Point that indicates where the bat house is located",
         verbose_name="geographical location")
@@ -166,61 +164,64 @@ class HouseEnvironmentFeatures(models.Model):
     structures, geography, noise nearby, light created, water sources,
     and sunlight.
     """
-    house = models.OneToOneField(
-        House, on_delete=models.CASCADE, primary_key=True)
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='environment_features')
 
     # Standing under the bat house and looking in all directions, select all...
+    HABITAT_DEGRADATION_CHOICES = (
+        ('DU', 'Dumping'),
+        ('ER', 'Erosion'),
+        ('TR', 'Trash'),
+        ('NO', 'None'),
+        ('OT', 'Other'),
+    )
     habitat_degradation = ArrayField(
         base_field=models.CharField(
-            max_length=2,
-            choices=(
-                ('DU', 'Dumping'),
-                ('ER', 'Erosion'),
-                ('TR', 'Trash'),
-                ('NO', 'None'),
-                ('OT', 'Other'),
-            )),
+            max_length=2, choices=HABITAT_DEGRADATION_CHOICES),
         help_text="Habitat degradation present around the bat house")
     other_habitat_degradation = models.CharField(
         max_length=255,
         blank=True,
         help_text="Habitat degradation if Other was selected")
+    HABITAT_TYPE_CHOICES = (('DE', 'Development'), ('FE', 'Forest Edge'),
+                            ('FG', 'Forest Gap'), ('FI',
+                                                   'Field'), ('SR',
+                                                              'Stream/River'),
+                            ('WP', 'Wetland/Pond'), ('OT', 'Other'))
     habitat_type = ArrayField(
         base_field=models.CharField(
             max_length=2,
-            choices=(('DE', 'Development'), ('FE', 'Forest Edge'),
-                     ('FG', 'Forest Gap'), ('FI', 'Field'), ('SR',
-                                                             'Stream/River'),
-                     ('WP', 'Wetland/Pond'), ('OT', 'Other'))),
-        help_text="Type of environment around the bat house")
+            choices=HABITAT_TYPE_CHOICES,
+            help_text="Type of environment around the bat house"))
     other_habitat_type = models.CharField(
         max_length=255,
         blank=True,
         help_text="Habitat type if Other was selected")
+    MAN_MADE_STRUCTURE_CHOICES = (
+        ('BU', 'Building'),
+        ('BR', 'Bridge'),
+        ('DA', 'Dam'),
+        ('DR', 'Dirt Road'),
+        ('FE', 'Fence'),
+        ('PR', 'Paved Roads'),
+        ('TR', 'Trail'),
+        ('NO', 'None'),
+        ('OT', 'Other'),
+    )
     man_made_structure = ArrayField(
         base_field=models.CharField(
-            max_length=2,
-            choices=(
-                ('BU', 'Building'),
-                ('BR', 'Bridge'),
-                ('DA', 'Dam'),
-                ('DR', 'Dirt Road'),
-                ('FE', 'Fence'),
-                ('PR', 'Paved Roads'),
-                ('TR', 'Trail'),
-                ('NO', 'None'),
-                ('OT', 'Other'),
-            )),
+            max_length=2, choices=MAN_MADE_STRUCTURE_CHOICES),
         help_text="Man-made structures present around the bat house")
     other_man_made_structure = models.CharField(
         max_length=255,
         blank=True,
         help_text="Man-made structures present if Other was selected")
+    NEARBY_GEOGRAPHY_CHOICES = (('VB', 'Valley or Bottomland Hillside'),
+                                ('RI', 'Ridgetop'), ('PL',
+                                                     'Plane (Flat Area)'))
     nearby_geography = ArrayField(
         base_field=models.CharField(
-            max_length=2,
-            choices=(('VB', 'Valley or Bottomland Hillside'),
-                     ('RI', 'Ridgetop'), ('PL', 'Plane (Flat Area)'))),
+            max_length=2, choices=NEARBY_GEOGRAPHY_CHOICES),
         help_text="Nearby geography of the area around the bat house")
     slope = models.CharField(
         max_length=1,
@@ -253,22 +254,21 @@ class HouseEnvironmentFeatures(models.Model):
             ('Q', 'Quiet'),
         ),
         help_text="Noise around the bat house throughout the night")
+    NOISE_DISTURBANCE_CHOICES = (
+        ('BI', 'Businesses/Industry'),
+        ('CA', 'Cars'),
+        ('PR', 'People/Residential'),
+        ('NO', 'None'),
+        ('OT', 'Other'),
+    )
     noise_disturbance = ArrayField(
         base_field=models.CharField(
-            max_length=2,
-            choices=(
-                ('BI', 'Businesses/Industry'),
-                ('CA', 'Cars'),
-                ('PR', 'People/Residential'),
-                ('NO', 'None'),
-                ('OT', 'Other'),
-            )),
+            max_length=2, choices=NOISE_DISTURBANCE_CHOICES),
         help_text="Noise disturbances around the bat house")
     other_noise_disturbance = models.CharField(
         max_length=255,
         blank=True,
         help_text="Noise disturbances if Other was selected")
-    submitted = models.DateTimeField(auto_now_add=True)
 
     # Man-made light at night
     night_light_pollution_amount = models.CharField(
@@ -321,6 +321,7 @@ class HouseEnvironmentFeatures(models.Model):
         help_text="Amount of hours of afternoon sunlight the bat house \
         receives")
 
+    surveyed = models.DateTimeField()
     other_features = models.TextField(
         help_text="Other environmental features not covered")
 
@@ -330,9 +331,9 @@ class HousePhysicalFeatures(models.Model):
     Describes a model that has all information regarding the physical
     characteristics of the bat house, including size, amount of chambers, etc.
     """
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='physical_features')
 
-    house = models.OneToOneField(
-        House, on_delete=models.CASCADE, primary_key=True)
     house_size = models.CharField(
         max_length=1,
         choices=(
@@ -401,9 +402,8 @@ class Observation(models.Model):
     Describes a model that a user will submit about observations for the
     presence of bats in their bat house.
     """
-
-    house = models.OneToOneField(
-        House, on_delete=models.CASCADE, primary_key=True)
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name="observations")
 
     checked = models.DateTimeField(
         help_text="Date and when the bat house was checked")
