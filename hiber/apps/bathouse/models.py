@@ -378,10 +378,9 @@ class HousePhysicalFeatures(models.Model):
     mounted_on = models.CharField(
         max_length=2,
         choices=(
-            ('BB', 'Back to back'),
             ('BD', 'Building'),
-            ('PI', 'Pole by itself'),
-            ('PI', 'Pole with another bat house'),
+            ('PI', 'On a pole by itself'),
+            ('PB', 'On a pole with another bat house, back to back'),
             ('TR', 'Tree'),
             ('OT', 'Other'),
         ),
@@ -406,7 +405,7 @@ class Observation(models.Model):
         House, on_delete=models.CASCADE, related_name="observations")
 
     checked = models.DateTimeField(
-        help_text="Date and when the bat house was checked")
+        help_text="Date and time when the bat house was checked")
     present = models.BooleanField(
         verbose_name="bat presence",
         help_text="True if bats were there, False otherwise")
