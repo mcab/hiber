@@ -13,6 +13,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INSTALLED_APPS.append('django_extensions')
 
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(192.168.1.)([0-9])?([0-9])?([0-9])?',
+    r'localhost:808([0-9])?',
+    r'127.0.0.1:808([0-9])?',
+)
+
 try:
     from .local import *
 except ImportError:
