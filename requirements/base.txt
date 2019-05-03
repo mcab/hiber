@@ -13,8 +13,5 @@ drf_yasg>=1.13.0,<2.0
 # Adds REST authentication
 djoser>=1.5.0,<1.6
 
-# Adds nested routes
-drf-nested-routers>=0.91,<0.92
-
 # Adds CORS headers
 django-cors-headers>=2.5.0,<2.6.0
