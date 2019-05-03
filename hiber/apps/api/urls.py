@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_nested import routers
 from . import views
 
 from rest_framework import permissions
@@ -19,20 +18,9 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny, ),
 )
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'bats', views.BatViewSet)
 router.register(r'houses', views.HouseViewSet)
-
-features_router = routers.NestedDefaultRouter(
-    router, r'houses', lookup='house')
-features_router.register(
-    r'environment',
-    views.HouseEnvironmentFeaturesViewSet,
-    basename='house-environment')
-features_router.register(
-    r'physical', views.HousePhysicalFeaturesViewSet, basename='house-physical')
-features_router.register(
-    r'observations', views.ObservationViewSet, basename='house-observations')
 
 v1_urlpatterns = [
     path(
@@ -40,7 +28,6 @@ v1_urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'),
     url('^', include(router.urls)),
-    url('^', include(features_router.urls)),
 ]
 
 # This is to let drf_yasg auto-generate the route while excluding

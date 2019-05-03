@@ -37,7 +37,6 @@ class ConditionalRequiredMixin:
     def validate(self, attrs):
         attrs = super().validate(attrs)
         for master_field, conditions in self.conditional_required_fields:
-            print(master_field, conditions)
             master_field_value = attrs.get(master_field)
             condition = conditions['condition']
             if not isinstance(condition, str) and isinstance(
@@ -61,8 +60,9 @@ class ConditionalRequiredMixin:
         return attrs
 
 
-class BatSerializer(serializers.HyperlinkedModelSerializer):
+class BatSerializer(serializers.ModelSerializer):
     # TODO: Get current image to display an absolute path over API
+    id = serializers.ReadOnlyField()
     rarity = ChoiceField(choices=Bat.RARITY_CHOICES)
     habits = serializers.ListField(
         child=ChoiceField(choices=Bat.HABIT_CHOICES))
@@ -79,12 +79,12 @@ class BatSerializer(serializers.HyperlinkedModelSerializer):
                   'size', 'pups', 'risk', 'risk_scope', 'bat_image')
 
 
-class HouseSerializer(ConditionalRequiredMixin,
-                      serializers.HyperlinkedModelSerializer):
+class HouseSerializer(ConditionalRequiredMixin, serializers.ModelSerializer):
     conditional_required_fields = [('property_type', {
         'condition': OTHER,
         'required_fields': ['other_property_type']
     })]
+    id = serializers.ReadOnlyField()
     watcher = serializers.ReadOnlyField(source='watcher.username')
     location = PointField()
     property_type = ChoiceField(
@@ -96,11 +96,11 @@ class HouseSerializer(ConditionalRequiredMixin,
     class Meta:
         model = House
         fields = ('__all__')
-        read_only_fields = ('watcher', 'created', 'updated')
+        read_only_fields = ('id', 'watcher', 'created', 'updated')
 
 
-class HouseEnvironmentFeaturesSerializer(
-        ConditionalRequiredMixin, serializers.HyperlinkedModelSerializer):
+class HouseEnvironmentFeaturesSerializer(ConditionalRequiredMixin,
+                                         serializers.ModelSerializer):
     conditional_required_fields = [
         ('habitat_degradation', {
             'condition': OTHER,
@@ -123,9 +123,8 @@ class HouseEnvironmentFeaturesSerializer(
             'required_fields': ['other_nearest_water_resource']
         })
     ]
-    url = serializers.HyperlinkedRelatedField(
-        read_only=True, view_name='houseenvironmentfeatures-detail')
-    house = HouseSerializer(required=False)
+    id = serializers.ReadOnlyField()
+    house_id = serializers.ReadOnlyField()
     habitat_degradation = serializers.ListField(
         child=ChoiceField(
             choices=HouseEnvironmentFeatures.HABITAT_DEGRADATION_CHOICES))
@@ -173,7 +172,7 @@ class HouseEnvironmentFeaturesSerializer(
 
 
 class HousePhysicalFeaturesSerializer(ConditionalRequiredMixin,
-                                      serializers.HyperlinkedModelSerializer):
+                                      serializers.ModelSerializer):
     conditional_required_fields = [('color', {
         'condition': OTHER,
         'required_fields': ['other_color']
@@ -182,9 +181,8 @@ class HousePhysicalFeaturesSerializer(ConditionalRequiredMixin,
                                        'condition': OTHER,
                                        'required_fields': ['other_mounted_on']
                                    })]
-    url = serializers.HyperlinkedRelatedField(
-        read_only=True, view_name='housephysicalfeatures-detail')
-    house = HouseSerializer(required=False)
+    id = serializers.ReadOnlyField()
+    house_id = serializers.ReadOnlyField()
     house_size = ChoiceField(
         choices=HousePhysicalFeatures._meta.get_field('house_size').choices)
     color = ChoiceField(
@@ -204,10 +202,9 @@ class HousePhysicalFeaturesSerializer(ConditionalRequiredMixin,
         fields = ('__all__')
 
 
-class ObservationSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedRelatedField(
-        read_only=True, view_name='observation-detail')
-    house = HouseSerializer(required=False)
+class ObservationSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    house_id = serializers.ReadOnlyField()
     acoustic_monitor = ChoiceField(
         choices=Observation._meta.get_field('acoustic_monitor').choices)
 
