@@ -64,13 +64,13 @@ class BatSerializer(serializers.ModelSerializer):
     # TODO: Get current image to display an absolute path over API
     id = serializers.ReadOnlyField()
     rarity = ChoiceField(choices=Bat.RARITY_CHOICES)
-    habits = serializers.ListField(
-        child=ChoiceField(choices=Bat.HABIT_CHOICES))
+    habits = serializers.ListField(child=ChoiceField(
+        choices=Bat.HABIT_CHOICES))
     size = FloatRangeField()
     pups = IntegerRangeField()
     risk = serializers.ListField(child=ChoiceField(choices=Bat.RISK_CHOICES))
-    risk_scope = serializers.ListField(
-        child=ChoiceField(choices=Bat.SCOPE_CHOICES))
+    risk_scope = serializers.ListField(child=ChoiceField(
+        choices=Bat.SCOPE_CHOICES))
     bat_image = ImageRenditionField('fill-200x200')
 
     class Meta:
@@ -89,8 +89,9 @@ class HouseSerializer(ConditionalRequiredMixin, serializers.ModelSerializer):
     location = PointField()
     property_type = ChoiceField(
         choices=House._meta.get_field('property_type').choices)
-    created = serializers.DateTimeField(
-        default=serializers.CreateOnlyDefault(timezone.now()), read_only=True)
+    created = serializers.DateTimeField(default=serializers.CreateOnlyDefault(
+        timezone.now()),
+                                        read_only=True)
     updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
@@ -125,28 +126,22 @@ class HouseEnvironmentFeaturesSerializer(ConditionalRequiredMixin,
     ]
     id = serializers.ReadOnlyField()
     house_id = serializers.ReadOnlyField()
-    habitat_degradation = serializers.ListField(
-        child=ChoiceField(
-            choices=HouseEnvironmentFeatures.HABITAT_DEGRADATION_CHOICES))
-    habitat_type = serializers.ListField(
-        child=ChoiceField(
-            choices=HouseEnvironmentFeatures.HABITAT_TYPE_CHOICES))
-    man_made_structure = serializers.ListField(
-        child=ChoiceField(
-            choices=HouseEnvironmentFeatures.MAN_MADE_STRUCTURE_CHOICES))
-    nearby_geography = serializers.ListField(
-        child=ChoiceField(
-            choices=HouseEnvironmentFeatures.NEARBY_GEOGRAPHY_CHOICES))
+    habitat_degradation = serializers.ListField(child=ChoiceField(
+        choices=HouseEnvironmentFeatures.HABITAT_DEGRADATION_CHOICES))
+    habitat_type = serializers.ListField(child=ChoiceField(
+        choices=HouseEnvironmentFeatures.HABITAT_TYPE_CHOICES))
+    man_made_structure = serializers.ListField(child=ChoiceField(
+        choices=HouseEnvironmentFeatures.MAN_MADE_STRUCTURE_CHOICES))
+    nearby_geography = serializers.ListField(child=ChoiceField(
+        choices=HouseEnvironmentFeatures.NEARBY_GEOGRAPHY_CHOICES))
     slope = ChoiceField(
         choices=HouseEnvironmentFeatures._meta.get_field('slope').choices)
     day_noise = ChoiceField(
         choices=HouseEnvironmentFeatures._meta.get_field('day_noise').choices)
-    night_noise = ChoiceField(
-        choices=HouseEnvironmentFeatures._meta.get_field(
-            'night_noise').choices)
-    noise_disturbance = serializers.ListField(
-        child=ChoiceField(
-            choices=HouseEnvironmentFeatures.NOISE_DISTURBANCE_CHOICES))
+    night_noise = ChoiceField(choices=HouseEnvironmentFeatures._meta.get_field(
+        'night_noise').choices)
+    noise_disturbance = serializers.ListField(child=ChoiceField(
+        choices=HouseEnvironmentFeatures.NOISE_DISTURBANCE_CHOICES))
     night_light_pollution_amount = ChoiceField(
         choices=HouseEnvironmentFeatures._meta.get_field(
             'night_light_pollution_amount').choices)

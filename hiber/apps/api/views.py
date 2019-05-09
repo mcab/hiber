@@ -8,9 +8,10 @@ from rest_framework.views import APIView
 from ..bathouse.models import (Bat, House, HouseEnvironmentFeatures,
                                HousePhysicalFeatures, Observation)
 from .permissions import (IsOwnerAndAuthenticated)
-from .serializers import (
-    BatSerializer, HouseSerializer, HouseEnvironmentFeaturesSerializer,
-    HousePhysicalFeaturesSerializer, ObservationSerializer)
+from .serializers import (BatSerializer, HouseSerializer,
+                          HouseEnvironmentFeaturesSerializer,
+                          HousePhysicalFeaturesSerializer,
+                          ObservationSerializer)
 
 
 class BatViewSet(viewsets.ReadOnlyModelViewSet):
@@ -31,10 +32,9 @@ class HouseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(watcher=self.request.user)
 
-    @action(
-        detail=True,
-        methods=['get', 'post'],
-        permission_classes=[IsOwnerAndAuthenticated])
+    @action(detail=True,
+            methods=['get', 'post'],
+            permission_classes=[IsOwnerAndAuthenticated])
     def environment(self, request, pk=None):
         """
         Returns a list of all the environment features
@@ -57,15 +57,13 @@ class HouseViewSet(viewsets.ModelViewSet):
             data["house_id"] = house.id
             record = HouseEnvironmentFeatures(**data)
             record.save()
-            return Response(
-                HouseEnvironmentFeaturesSerializer(record).data,
-                status=status.HTTP_201_CREATED)
+            return Response(HouseEnvironmentFeaturesSerializer(record).data,
+                            status=status.HTTP_201_CREATED)
         return HttpResponseServerError()
 
-    @action(
-        detail=True,
-        methods=['get', 'post'],
-        permission_classes=[IsOwnerAndAuthenticated])
+    @action(detail=True,
+            methods=['get', 'post'],
+            permission_classes=[IsOwnerAndAuthenticated])
     def physical(self, request, pk=None):
         """
         Returns a list of all the physical features
@@ -87,15 +85,13 @@ class HouseViewSet(viewsets.ModelViewSet):
             data["house_id"] = house.id
             record = HousePhysicalFeatures(**data)
             record.save()
-            return Response(
-                HousePhysicalFeaturesSerializer(record).data,
-                status=status.HTTP_201_CREATED)
+            return Response(HousePhysicalFeaturesSerializer(record).data,
+                            status=status.HTTP_201_CREATED)
         return HttpResponseServerError()
 
-    @action(
-        detail=True,
-        methods=['get', 'post'],
-        permission_classes=[IsOwnerAndAuthenticated])
+    @action(detail=True,
+            methods=['get', 'post'],
+            permission_classes=[IsOwnerAndAuthenticated])
     def observations(self, request, pk=None):
         """
         Returns a list of all the observations the house has
@@ -114,9 +110,8 @@ class HouseViewSet(viewsets.ModelViewSet):
             data["house_id"] = house.id
             record = Observation(**data)
             record.save()
-            return Response(
-                ObservationSerializer(record).data,
-                status=status.HTTP_201_CREATED)
+            return Response(ObservationSerializer(record).data,
+                            status=status.HTTP_201_CREATED)
         return HttpResponseServerError()
 
 
