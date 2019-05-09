@@ -35,18 +35,17 @@ class Bat(models.Model):
     This is consumed on the front-end to show species of bats to the user,
     as well as a way to tag what bats were seen at a particular House.
     """
-    common_name = models.CharField(
-        max_length=255, help_text="Name used in everyday life")
+    common_name = models.CharField(max_length=255,
+                                   help_text="Name used in everyday life")
     scientific_name = models.CharField(
         max_length=255, help_text="Formal system used for naming species")
 
     RARITY_CHOICES = (('CO', 'Common'), ('SC', 'Seasonally Common'), ('RA',
                                                                       'Rare'))
-    rarity = models.CharField(
-        max_length=2,
-        choices=RARITY_CHOICES,
-        default='CO',
-        help_text="How often the species is seen")
+    rarity = models.CharField(max_length=2,
+                              choices=RARITY_CHOICES,
+                              default='CO',
+                              help_text="How often the species is seen")
 
     HABIT_CHOICES = (('HI', 'Hibernates'), ('MI', 'Migrates'),
                      ('CR', 'Cave roosts'), ('TR', 'Tree roosts'))
@@ -60,10 +59,10 @@ class Bat(models.Model):
 
     RISK_CHOICES = (('NT', 'Not threatened'), ('EN', 'Endangered'),
                     ('TH', 'Threatened'), ('SC', 'Special concern'))
-    risk = ChoiceArrayField(
-        models.CharField(max_length=2, choices=RISK_CHOICES),
-        blank=True,
-        help_text="Conservation status for the species")
+    risk = ChoiceArrayField(models.CharField(max_length=2,
+                                             choices=RISK_CHOICES),
+                            blank=True,
+                            help_text="Conservation status for the species")
 
     SCOPE_CHOICES = (('ST', 'State'), ('FE', 'Federally'))
     risk_scope = ChoiceArrayField(
@@ -88,17 +87,15 @@ class Bat(models.Model):
                         classname="collapsible"),
         MultiFieldPanel([
             FieldPanel('rarity', classname="col12"),
-            FieldPanel(
-                'habits',
-                classname="col12",
-                widget=forms.CheckboxSelectMultiple),
-            FieldPanel(
-                'risk', classname="col12",
-                widget=forms.CheckboxSelectMultiple),
-            FieldPanel(
-                'risk_scope',
-                classname="col12",
-                widget=forms.CheckboxSelectMultiple),
+            FieldPanel('habits',
+                       classname="col12",
+                       widget=forms.CheckboxSelectMultiple),
+            FieldPanel('risk',
+                       classname="col12",
+                       widget=forms.CheckboxSelectMultiple),
+            FieldPanel('risk_scope',
+                       classname="col12",
+                       widget=forms.CheckboxSelectMultiple),
         ],
                         heading="Information",
                         classname="collapsible"),
@@ -136,11 +133,10 @@ class House(models.Model):
     location = models.PointField(
         help_text="Point that indicates where the bat house is located",
         verbose_name="geographical location")
-    town_name = models.CharField(
-        blank=True,
-        max_length=255,
-        help_text="Town where bat house is located",
-        verbose_name="town location")
+    town_name = models.CharField(blank=True,
+                                 max_length=255,
+                                 help_text="Town where bat house is located",
+                                 verbose_name="town location")
     property_type = models.CharField(
         default='OT',
         max_length=2,
@@ -151,10 +147,10 @@ class House(models.Model):
         max_length=255,
         blank=True,
         help_text="Property type if Other was selected")
-    created = models.DateTimeField(
-        auto_now_add=True, help_text="Date when House was created")
-    updated = models.DateTimeField(
-        auto_now=True, help_text="Date when House was updated")
+    created = models.DateTimeField(auto_now_add=True,
+                                   help_text="Date when House was created")
+    updated = models.DateTimeField(auto_now=True,
+                                   help_text="Date when House was updated")
 
 
 class HouseEnvironmentFeatures(models.Model):
@@ -164,8 +160,9 @@ class HouseEnvironmentFeatures(models.Model):
     structures, geography, noise nearby, light created, water sources,
     and sunlight.
     """
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='environment_features')
+    house = models.ForeignKey(House,
+                              on_delete=models.CASCADE,
+                              related_name='environment_features')
 
     # Standing under the bat house and looking in all directions, select all...
     HABITAT_DEGRADATION_CHOICES = (
@@ -176,23 +173,21 @@ class HouseEnvironmentFeatures(models.Model):
         ('OT', 'Other'),
     )
     habitat_degradation = ArrayField(
-        base_field=models.CharField(
-            max_length=2, choices=HABITAT_DEGRADATION_CHOICES),
+        base_field=models.CharField(max_length=2,
+                                    choices=HABITAT_DEGRADATION_CHOICES),
         help_text="Habitat degradation present around the bat house")
     other_habitat_degradation = models.CharField(
         max_length=255,
         blank=True,
         help_text="Habitat degradation if Other was selected")
     HABITAT_TYPE_CHOICES = (('DE', 'Development'), ('FE', 'Forest Edge'),
-                            ('FG', 'Forest Gap'), ('FI',
-                                                   'Field'), ('SR',
-                                                              'Stream/River'),
-                            ('WP', 'Wetland/Pond'), ('OT', 'Other'))
-    habitat_type = ArrayField(
-        base_field=models.CharField(
-            max_length=2,
-            choices=HABITAT_TYPE_CHOICES,
-            help_text="Type of environment around the bat house"))
+                            ('FG', 'Forest Gap'), ('FI', 'Field'),
+                            ('SR', 'Stream/River'), ('WP', 'Wetland/Pond'),
+                            ('OT', 'Other'))
+    habitat_type = ArrayField(base_field=models.CharField(
+        max_length=2,
+        choices=HABITAT_TYPE_CHOICES,
+        help_text="Type of environment around the bat house"))
     other_habitat_type = models.CharField(
         max_length=255,
         blank=True,
@@ -209,8 +204,8 @@ class HouseEnvironmentFeatures(models.Model):
         ('OT', 'Other'),
     )
     man_made_structure = ArrayField(
-        base_field=models.CharField(
-            max_length=2, choices=MAN_MADE_STRUCTURE_CHOICES),
+        base_field=models.CharField(max_length=2,
+                                    choices=MAN_MADE_STRUCTURE_CHOICES),
         help_text="Man-made structures present around the bat house")
     other_man_made_structure = models.CharField(
         max_length=255,
@@ -220,18 +215,17 @@ class HouseEnvironmentFeatures(models.Model):
                                 ('RI', 'Ridgetop'), ('PL',
                                                      'Plane (Flat Area)'))
     nearby_geography = ArrayField(
-        base_field=models.CharField(
-            max_length=2, choices=NEARBY_GEOGRAPHY_CHOICES),
+        base_field=models.CharField(max_length=2,
+                                    choices=NEARBY_GEOGRAPHY_CHOICES),
         help_text="Nearby geography of the area around the bat house")
-    slope = models.CharField(
-        max_length=1,
-        choices=(
-            ('F', 'Flat'),
-            ('G', 'Gentle'),
-            ('U', 'Undulating'),
-            ('S', 'Steep'),
-        ),
-        help_text="Type of slope the bat house is on")
+    slope = models.CharField(max_length=1,
+                             choices=(
+                                 ('F', 'Flat'),
+                                 ('G', 'Gentle'),
+                                 ('U', 'Undulating'),
+                                 ('S', 'Steep'),
+                             ),
+                             help_text="Type of slope the bat house is on")
     tree_type = models.IntegerField(
         validators=[MinValueValidator(0),
                     MaxValueValidator(5)],
@@ -262,8 +256,8 @@ class HouseEnvironmentFeatures(models.Model):
         ('OT', 'Other'),
     )
     noise_disturbance = ArrayField(
-        base_field=models.CharField(
-            max_length=2, choices=NOISE_DISTURBANCE_CHOICES),
+        base_field=models.CharField(max_length=2,
+                                    choices=NOISE_DISTURBANCE_CHOICES),
         help_text="Noise disturbances around the bat house")
     other_noise_disturbance = models.CharField(
         max_length=255,
@@ -331,8 +325,9 @@ class HousePhysicalFeatures(models.Model):
     Describes a model that has all information regarding the physical
     characteristics of the bat house, including size, amount of chambers, etc.
     """
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='physical_features')
+    house = models.ForeignKey(House,
+                              on_delete=models.CASCADE,
+                              related_name='physical_features')
 
     house_size = models.CharField(
         max_length=1,
@@ -342,19 +337,18 @@ class HousePhysicalFeatures(models.Model):
             ('L', 'Large'),
         ),
         help_text="Approximate size of the bat house")
-    color = models.CharField(
-        max_length=2,
-        choices=(
-            ('BL', 'Black'),
-            ('DB', 'Dark brown'),
-            ('MB', 'Medium brown'),
-            ('LB', 'Light brown'),
-            ('TB', 'Tan/Beige'),
-            ('NW', 'Natural wood'),
-            ('WH', 'White'),
-            ('OT', 'Other'),
-        ),
-        help_text="Color of bat house")
+    color = models.CharField(max_length=2,
+                             choices=(
+                                 ('BL', 'Black'),
+                                 ('DB', 'Dark brown'),
+                                 ('MB', 'Medium brown'),
+                                 ('LB', 'Light brown'),
+                                 ('TB', 'Tan/Beige'),
+                                 ('NW', 'Natural wood'),
+                                 ('WH', 'White'),
+                                 ('OT', 'Other'),
+                             ),
+                             help_text="Color of bat house")
     other_color = models.CharField(
         blank=True,
         max_length=255,
@@ -401,8 +395,9 @@ class Observation(models.Model):
     Describes a model that a user will submit about observations for the
     presence of bats in their bat house.
     """
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name="observations")
+    house = models.ForeignKey(House,
+                              on_delete=models.CASCADE,
+                              related_name="observations")
 
     checked = models.DateTimeField(
         help_text="Date and time when the bat house was checked")
@@ -416,5 +411,5 @@ class Observation(models.Model):
         choices=(('Y', 'Yes'), ('N', 'No'), ('U', 'Unsure')),
         help_text="Has a bat biologist came to setup acoustic monitoring around \
             the bat house?")
-    notes = models.TextField(
-        blank=True, help_text="Other notes about observations")
+    notes = models.TextField(blank=True,
+                             help_text="Other notes about observations")

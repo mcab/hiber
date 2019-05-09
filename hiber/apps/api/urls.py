@@ -23,10 +23,9 @@ router.register(r'bats', views.BatViewSet)
 router.register(r'houses', views.HouseViewSet)
 
 v1_urlpatterns = [
-    path(
-        'docs/',
-        schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc'),
+    path('docs/',
+         schema_view.with_ui('redoc', cache_timeout=0),
+         name='schema-redoc'),
     url('^', include(router.urls)),
 ]
 
